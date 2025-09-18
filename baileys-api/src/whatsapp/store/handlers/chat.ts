@@ -28,7 +28,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
 					}));
 				const chatsAdded = (
 					await tx.chat.createMany({
-						data: processedChats,
+						data: processedChats as any,
 					})
 				).count;
 
@@ -42,7 +42,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
 				sessionId,
 				undefined,
 				"error",
-				`An error occured during chats set: ${e.message}`,
+				`An error occured during chats set: ${e}`,
 			);
 		}
 	};
@@ -56,7 +56,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
 					.map((data) => {
 						model.upsert({
 							select: { pkId: true },
-							create: { ...data, sessionId },
+							create: { ...data, sessionId } as any,
 							update: data,
 							where: { sessionId_id: { id: data.id, sessionId } },
 						});
@@ -71,7 +71,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
 				sessionId,
 				undefined,
 				"error",
-				`An error occured during chats upsert: ${e.message}`,
+				`An error occured during chats upsert: ${e}`,
 			);
 		}
 	};
@@ -115,7 +115,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
                sessionId,
                undefined,
                "error",
-               `An error occurred during chat update: ${e.message}`,
+               `An error occurred during chat update: ${e}`,
             );
             logger.error(e, "An error occurred during chat update");
          }
@@ -136,7 +136,7 @@ export default function chatHandler(sessionId: string, event: BaileysEventEmitte
 				sessionId,
 				undefined,
 				"error",
-				`An error occured during chats delete: ${e.message}`,
+				`An error occured during chats delete: ${e}`,
 			);
 		}
 	};

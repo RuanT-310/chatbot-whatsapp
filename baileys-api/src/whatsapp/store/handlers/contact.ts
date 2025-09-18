@@ -42,7 +42,7 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 				sessionId,
 				undefined,
 				"error",
-				`An error occured during contacts set: ${e.message}`,
+				`An error occured during contacts set: ${e}`,
 			);
 		}
 	};
@@ -74,7 +74,7 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 				sessionId,
 				undefined,
 				"error",
-				`An unexpected error occurred during contacts upsert: ${error.message}`,
+				`An unexpected error occurred during contacts upsert: ${error}`,
 			);
 		}
 	};
@@ -101,7 +101,7 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 					sessionId,
 					undefined,
 					"error",
-					`An error occured during contact update: ${e.message}`,
+					`An error occured during contact update: ${e}`,
 				);
 			}
 		}
