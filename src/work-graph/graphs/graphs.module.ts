@@ -3,9 +3,10 @@ import { AnswerQuestionGraph } from './answer-question-graph/answer-question-gra
 import { LlmGeminiGogle } from '../lmm/llm-gemini-gogle/llm-gemini-gogle';
 import { ToolsModule } from '../tools/tools.module';
 import { LLmProvider } from '../lmm/llm-provider';
+import { ConfigModule } from 'src/config/config.module';
 
 @Module({
-    imports: [ToolsModule],
+    imports: [ConfigModule, ToolsModule],
     providers: [
         AnswerQuestionGraph,
         {

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class SegredoCaixa {
     tool() {
-        return tool(this.toolFunction, {
+        return tool(this.toolFunction.bind(this), {
             name: "segredoDaCaixa",
             description: "Use a quando quizer saber o segredo da caixa",
         })
