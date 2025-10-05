@@ -33,7 +33,7 @@ services:
     image: devlikeapro/waha:latest
     platform: linux/amd64
     environment:
-      WHATSAPP_HOOK_URL: http://host.docker.internal:5678/webhook/webhook
+      WHATSAPP_HOOK_URL: http://host.docker.internal:3000/waha/webhook
       WHATSAPP_DEFAULT_ENGINE: GOWS
       WHATSAPP_HOOK_EVENTS: message
       WAHA_API_KEY: admin
@@ -43,7 +43,7 @@ services:
       - waha_sessions:/app/.sessions
       - waha_media:/app/.media
     ports:
-      - "3000:3000"
+      - "4000:3000"
 
   n8n:
     image: n8nio/n8n:latest

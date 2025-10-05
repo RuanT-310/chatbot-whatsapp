@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreateWahaDto } from './dto/create-waha.dto';
 import { UpdateWahaDto } from './dto/update-waha.dto';
-
+import { WebHookMessageDto } from './dto/webhook-messge-dto';
+import { HttpService } from '@nestjs/axios'
+import { firstValueFrom } from 'rxjs';
 @Injectable()
 export class WahaService {
-  create(createWahaDto: CreateWahaDto) {
-    return 'This action adds a new waha';
-  }
+  constructor(
+    private readonly httpService: HttpService,
+  ) {}
 
-  findAll() {
-    return `This action returns all waha`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} waha`;
-  }
-
-  update(id: number, updateWahaDto: UpdateWahaDto) {
-    return `This action updates a #${id} waha`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} waha`;
+  async sendTextMessage(chatId: string, text: string, session: string): Promise<any> {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const response = this.httpService.post<any>(
+      `${'http://localhost:4000'}/api/sendText`,
+      {
+        session,
+        chatId,
+        text,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': 'admin'
+        },
+      },
+    )
+    return firstValueFrom(response);
   }
 }

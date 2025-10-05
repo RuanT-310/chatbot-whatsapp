@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WahaModule } from './waha/waha.module';
+import { ConfigModule } from './config/config.module';
 import { WorkGraphModule } from './work-graph/work-graph.module';
-import { AgentModule } from './agent/agent.module';
 import { WahaModule } from './waha/waha.module';
+import { Lmm } from './work/lmm/lmm';
 
 @Module({
-  imports: [WahaModule, AgentModule, WorkGraphModule],
+  imports: [WahaModule, WorkGraphModule, ConfigModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Lmm],
 })
 export class AppModule {}
