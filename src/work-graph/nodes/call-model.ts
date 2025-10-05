@@ -9,7 +9,7 @@ export function createCallModelWithTools(model: Runnable<BaseLanguageModelInput,
         // 3. O 'model' injetado está disponível aqui via Closure
         const response = await model.invoke(state.messages);
         
-        // Retorna o resultado para ser mesclado ao estado
+        console.log(state.messages)
         return { messages: [response] };
     }
     return callModel; 

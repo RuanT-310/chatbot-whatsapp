@@ -1,6 +1,6 @@
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AIMessage } from '@langchain/core/messages';
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
+import { DynamicTool } from '@langchain/core/tools';
 import { BaseCheckpointSaver, BaseStore, END, START, StateGraph } from '@langchain/langgraph';
 import { All, BaseCache } from '@langchain/langgraph-checkpoint';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
@@ -9,14 +9,20 @@ import { N } from 'node_modules/@langchain/langgraph/dist/prebuilt/react_agent_e
 import { LLmProvider } from 'src/work-graph/lmm/llm-provider';
 import { createCallModelWithTools } from 'src/work-graph/nodes/call-model';
 import { AgentState } from 'src/work-graph/states/agent-state';
-import { searchTool } from 'src/work-graph/toolss/search-tool';
+import { SegredoCaixa } from 'src/work-graph/tools/segredo-caixa/segredo-caixa';
+import { th } from 'zod/v4/locales';
 
 @Injectable()
 export class AnswerQuestionGraph {
     model: BaseChatModel
+    tools: DynamicTool[] = []
     constructor (
-        modelProvider: LLmProvider
+        modelProvider: LLmProvider,
+        segredoCaixaToolProvider: SegredoCaixa
     ) {
+        this.tools.push(
+            segredoCaixaToolProvider.tool()
+        )
         this.model = modelProvider.model()
     }
     compiled(config?: {
@@ -28,16 +34,16 @@ export class AnswerQuestionGraph {
         name?: string;
         description?: string;
     }) {
+        console.log(this.tools)
         return this.graph().compile(config as any);
     }
     graph() {
         
         const model = this.model
         if (!model.bindTools) throw new Error("Model must have bindTools method")
-        const tools = [searchTool]
+        const tools = this.tools
         const boundModel = model.bindTools(tools)
         const toolNode = new ToolNode<typeof AgentState.State>(tools)
-        // Define the function that calls the model
         const callModel = createCallModelWithTools(boundModel)
         
         return new StateGraph(AgentState)
