@@ -1,6 +1,6 @@
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { AIMessage } from '@langchain/core/messages';
-import { DynamicTool } from '@langchain/core/tools';
+import { DynamicStructuredTool, DynamicTool } from '@langchain/core/tools';
 import { BaseCheckpointSaver, BaseStore, END, START, StateGraph } from '@langchain/langgraph';
 import { All, BaseCache } from '@langchain/langgraph-checkpoint';
 import { ToolNode } from '@langchain/langgraph/prebuilt';
@@ -9,19 +9,22 @@ import { N } from 'node_modules/@langchain/langgraph/dist/prebuilt/react_agent_e
 import { LLmProvider } from 'src/work-graph/lmm/llm-provider';
 import { createCallModelWithTools } from 'src/work-graph/nodes/call-model';
 import { AgentState } from 'src/work-graph/states/agent-state';
+import { RentalSearch } from 'src/work-graph/tools/rental/rental-search/rental-search';
 import { SegredoCaixa } from 'src/work-graph/tools/segredo-caixa/segredo-caixa';
 import { th } from 'zod/v4/locales';
 
 @Injectable()
 export class AnswerQuestionGraph {
     model: BaseChatModel
-    tools: DynamicTool[] = []
+    tools: (DynamicTool | DynamicStructuredTool)[] = []
     constructor (
         modelProvider: LLmProvider,
-        segredoCaixaToolProvider: SegredoCaixa
+        segredoCaixaToolProvider: SegredoCaixa,
+        searchRentalToolProvider: RentalSearch,
     ) {
         this.tools.push(
-            segredoCaixaToolProvider.tool()
+            segredoCaixaToolProvider.tool(),
+            searchRentalToolProvider.tool()
         )
         this.model = modelProvider.model()
     }

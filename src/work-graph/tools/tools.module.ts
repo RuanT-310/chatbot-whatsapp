@@ -5,6 +5,6 @@ import { RentalModule } from './rental/rental.module';
 @Module({
   imports: [RentalModule],
   providers: [SegredoCaixa],
-  exports: [SegredoCaixa],
+  exports: [SegredoCaixa, RentalModule],
 })
 export class ToolsModule {}

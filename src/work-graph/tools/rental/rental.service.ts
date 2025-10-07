@@ -2,9 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateRentalInput } from '../schema/create-rental-input';
 import { Rental } from '../schema/rental-schema';
 import { UpdateRentalInput } from '../schema/update-rental-input';
+import { CreateRentalInput } from '../schema/create-rental-input';
 
 
 @Injectable()
@@ -106,6 +106,7 @@ export class RentalService {
             }
         `;
         const response = await this._requestGraphQL<{ rental: Rental }>(query, { id });
+        console.log(response);
         return response.rental;
     }
 

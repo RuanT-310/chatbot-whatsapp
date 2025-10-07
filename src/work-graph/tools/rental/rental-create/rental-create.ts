@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { RentalService } from "../rental.service";
-import { createRentalSchema } from "../../schema/create-rental-input";
 import z from "zod";
 import { tool } from "@langchain/core/tools";
+import { createRentalSchema } from "../../schema/create-rental-input";
 
 @Injectable()
 export class RentalCreate {
