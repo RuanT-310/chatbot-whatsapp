@@ -4,6 +4,7 @@ import { WahaController } from './waha.controller';
 import { HttpModule } from '@nestjs/axios';
 import { WorkGraphModule } from 'src/work-graph/work-graph.module';
 import { CustomerModule } from 'src/customer/customer.module';
+import { MessagesModule } from 'src/messages/messages.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { CustomerModule } from 'src/customer/customer.module';
       maxRedirects: 5,
     }),
     WorkGraphModule,
-    CustomerModule
+    CustomerModule,
+    MessagesModule
   ],
   controllers: [WahaController],
   providers: [WahaService],

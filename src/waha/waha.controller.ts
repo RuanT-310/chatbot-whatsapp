@@ -3,6 +3,7 @@ import { WahaService } from './waha.service';
 import { WebHookMessageDto } from './dto/webhook-messge-dto';
 import { WorkGraphService } from 'src/work-graph/work-graph.service';
 import { CustomerService } from 'src/customer/customer.service';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Controller('waha')
 export class WahaController {
@@ -11,6 +12,7 @@ export class WahaController {
   constructor(
     private readonly wahaService: WahaService,
     private readonly customerService: CustomerService,
+    private readonly messagesService: MessagesService,
     private readonly agentService: WorkGraphService
   ) {}
 
@@ -45,9 +47,24 @@ export class WahaController {
         customer = await this.customerService.create({ name: customerName, number: customerNumber });
         this.logger.log(`Novo cliente criado: ${customer.number} - ID: ${customer.id}`);
       } else {
-        this.logger.log(`Cliente existente: ${customer.number} - ID: ${customer.id}`);
+        const [today, _] = new Date().toISOString().split('T');
+        const todayMessages = await this.messagesService.findByDay(customer.id, today);
+        const todayMessagesFlow = await this.messagesService.chatMessagesPrompt(todayMessages);
+        console.log(todayMessagesFlow);
       }
+      const message = await this.messagesService.create({ 
+        body: payload.body, 
+        timestamp: new Date(timestamp).toISOString(),
+        customerId: customer.id
+      });
       console.log('Customer:', customer);
+
+      await this.messagesService.createChatMessage({
+        body: "Recebemos sua mensagem e em breve retornaremos.",
+        timestamp: new Date().toISOString(),
+        customerId: customer.id,
+        ref: message.id //tem que pegar o id da mensagem recebida mesmo
+      })
        /* const resposta = await this.agentService.answerUserQuestion(payload.body);
         console.log(resposta)
       await this.wahaService.sendTextMessage(
@@ -64,10 +81,11 @@ export class WahaController {
 
   @Get('/health')
   @HttpCode(HttpStatus.OK)
-  async healthCheck(): Promise<{ status: string; timestamp: string }> {
+  async healthCheck() {
     return {
       status: 'healthy',
       timestamp: new Date().toISOString(),
+      messages: await this.messagesService.findAll()
     };
   }
 }
