@@ -7,9 +7,10 @@ import { WahaModule } from './waha/waha.module';
 import { CustomerModule } from './customer/customer.module';
 import { DatabaseModule } from './database/database.module';
 import { MessagesModule } from './messages/messages.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [WahaModule, WorkGraphModule, ConfigModule, CustomerModule, DatabaseModule, MessagesModule],
+  imports: [WahaModule, WorkGraphModule, ConfigModule, CustomerModule, DatabaseModule, MessagesModule, ProductModule],
   controllers: [AppController],
   providers: [AppService],
 })
