@@ -9,6 +9,7 @@ import * as Joi from 'joi';
           .default('development'),
         GEMINIAPIKEY: Joi.string().required(),
         PORT: Joi.number().default(3000),
+        WAHA_URL: Joi.string().required(),
       }),
       isGlobal: true,
     })],

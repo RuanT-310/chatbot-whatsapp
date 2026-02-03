@@ -19,8 +19,19 @@ export class WorkGraphService {
             checkpointer:  new MemorySaver() 
         })
     }
-    answerQuestion(question: string){
-        return "respondido"
+
+    async flowNewCustomerConversation(newCustomerMessage: string) {
+        // especific prompt for flow for new customers
+        const answer = await this.answerQuestionGraph.invoke({
+            messages: [new HumanMessage(newCustomerMessage)],
+            
+        }, {
+            configurable: {
+                thread_id: "user-123-conversation-456",
+            },
+        })
+        const messages = answer.messages as BaseMessage[]
+        return messages[messages.length - 1].content
     }
     async answerUserQuestion(question: string){
 

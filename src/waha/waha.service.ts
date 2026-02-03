@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreateWahaDto } from './dto/create-waha.dto';
-import { UpdateWahaDto } from './dto/update-waha.dto';
 import { WebHookMessageDto } from './dto/webhook-messge-dto';
 import { HttpService } from '@nestjs/axios'
 import { firstValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class WahaService {
   constructor(
     private readonly httpService: HttpService,
+    private readonly configService: ConfigService
   ) {}
 
   async sendTextMessage(chatId: string, text: string, session: string): Promise<any> {
     await new Promise(resolve => setTimeout(resolve, 1000));
     const response = this.httpService.post<any>(
-      `${'http://localhost:4000'}/api/sendText`,
+      `${this.configService.getOrThrow<string>('WAHA_URL')}/api/sendText`,
       {
         session,
         chatId,

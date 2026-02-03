@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { WorkGraphModule } from './work-graph/work-graph.module';
 import { WahaModule } from './waha/waha.module';
+import { CustomerModule } from './customer/customer.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [WahaModule, WorkGraphModule, ConfigModule],
+  imports: [WahaModule, WorkGraphModule, ConfigModule, CustomerModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })
