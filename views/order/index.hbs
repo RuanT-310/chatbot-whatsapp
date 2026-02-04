@@ -1,0 +1,190 @@
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Novo Pedido / Reserva Multi-Itens</h5>
+                <span class="badge bg-light text-primary">Cantinho dos Assados</span>
+            </div>
+            <div class="card-body">
+                <form id="orderForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Cliente</label>
+                        <select id="customerId" class="form-select" required>
+                            <option value="" disabled selected>Selecione o cliente...</option>
+                            {{#each customers}}
+                                <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Método de Pagamento</label>
+                        <select id="paymentMethod" class="form-select">
+                            <option value="pix">Pix</option>
+                            <option value="cash">Dinheiro</option>
+                            <option value="credit_card">Cartão</option>
+                        </select>
+                    </div>
+
+                    <hr>
+                    <h6 class="fw-bold">Itens do Pedido</h6>
+                    
+                    <div id="itemsContainer">
+                        <div class="row g-2 item-row mb-2">
+                            <div class="col-md-6">
+                                <select class="form-select stock-select" required onchange="updateTotal()">
+                                    <option value="" disabled selected>Produto (Lote)</option>
+                                    {{#each stocks}}
+                                        <option value="{{this.id}}" data-price="{{this.product.price}}">
+                                            {{this.product.name}} (Lote: {{this.batchNumber}} - R$ {{this.product.price}})
+                                        </option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control qty-input" step="0.5" min="0.5" placeholder="Qtd" required oninput="updateTotal()">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center text-danger">
+                                <button type="button" class="btn btn-outline-danger btn-sm border-0" onclick="removeItem(this)">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addItem()">+ Adicionar Outro Produto</button>
+                    </div>
+
+                    <hr>
+                    <div class="col-md-12 d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 text-success">Total: <span id="grandTotal">R$ 0,00</span></h4>
+                        <button type="submit" class="btn btn-success px-5 fw-bold">Finalizar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Lista de Pedidos Recentes</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Itens</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each orders}}
+                        <tr class="clickable-row" style="cursor: pointer;" onclick="if(!event.target.closest('button') && !event.target.closest('form')) window.location='/order/detail/{{this.id}}'">
+                            <td><span class="text-muted">#{{this.id}}</span></td>
+                            <td class="fw-bold">{{this.customer.name}}</td>
+                            <td>
+                                {{#each this.items}}
+                                    <small class="d-block text-truncate" style="max-width: 200px;">
+                                        • {{this.quantity}}x {{this.stock.product.name}}
+                                    </small>
+                                {{/each}}
+                            </td>
+                            <td class="fw-bold text-success">R$ {{this.totalPrice}}</td>
+                            <td>
+                                <span class="badge {{statusBadge this.status}}">{{this.status}}</span>
+                                <small class="d-block text-muted text-uppercase" style="font-size: 0.7rem;">{{this.paymentMethod}}</small>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    {{#ifEquals this.paymentStatus 'pending'}}
+                                        <form action="/order/pay/{{this.id}}" method="POST">
+                                            <button type="submit" class="btn btn-sm btn-outline-success fw-bold">
+                                                <i class="bi bi-currency-dollar"></i> Pagar
+                                            </button>
+                                        </form>
+                                    {{else}}
+                                        <span class="badge bg-success"><i class="bi bi-check-all"></i> Pago</span>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status 'pending'}}
+                                        <form action="/order/confirm/{{this.id}}" method="POST">
+                                            <button type="submit" class="btn btn-sm btn-primary fw-bold">Entregar</button>
+                                        </form>
+                                    {{/ifEquals}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{else}}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">Nenhum pedido realizado hoje.</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para adicionar nova linha de item
+    function addItem() {
+        const container = document.getElementById('itemsContainer');
+        const firstRow = container.querySelector('.item-row');
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelector('.qty-input').value = '';
+        newRow.querySelector('.stock-select').selectedIndex = 0;
+        container.appendChild(newRow);
+    }
+
+    // Função para remover linha
+    function removeItem(btn) {
+        const rows = document.querySelectorAll('.item-row');
+        if (rows.length > 1) {
+            btn.closest('.item-row').remove();
+            updateTotal();
+        }
+    }
+
+    // Calcula o total dinamicamente
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('.item-row').forEach(row => {
+            const select = row.querySelector('.stock-select');
+            const qty = parseFloat(row.querySelector('.qty-input').value) || 0;
+            const price = parseFloat(select.options[select.selectedIndex]?.dataset.price) || 0;
+            total += price * qty;
+        });
+        document.getElementById('grandTotal').innerText = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total);
+    }
+
+    // Envio do Formulário via JSON (Para o NestJS receber múltiplos itens)
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const data = {
+            customerId: document.getElementById('customerId').value,
+            paymentMethod: document.getElementById('paymentMethod').value,
+            items: []
+        };
+
+        document.querySelectorAll('.item-row').forEach(row => {
+            data.items.push({
+                stockId: row.querySelector('.stock-select').value,
+                quantity: parseFloat(row.querySelector('.qty-input').value)
+            });
+        });
+
+        const response = await fetch('/order/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) window.location.reload();
+        else alert('Erro ao criar pedido. Verifique o estoque.');
+    });
+</script>

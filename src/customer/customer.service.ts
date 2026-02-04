@@ -19,7 +19,19 @@ export class CustomerService {
   }
 
   findOne(id: number) {
-    return this.customerRepository.findOne({where: {id}, relations: ['messages']});
+    return this.customerRepository.findOne({
+      where: {id}, 
+      relations: ['messages', "orders", "orders.items", "orders.items.stock", "orders.items.stock.product"],
+      select: {
+        id: true, 
+        name: true, 
+        number: true, 
+        messages: {
+          id: true, body: true, timestamp: true, ref: true
+        }, 
+        orders: true
+      }
+    });
   }
 
   findByNumber(number: string) {

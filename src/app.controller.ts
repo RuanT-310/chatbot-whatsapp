@@ -7,13 +7,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  
   getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Post()
-  test(@Body() {me, payload, ...data}: WebHookMessageDto): string {
-    console.log(me, payload, data)
     return this.appService.getHello();
   }
 }

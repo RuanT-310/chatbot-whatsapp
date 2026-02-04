@@ -61,6 +61,7 @@ export class MessagesService {
         id: true,
         body: true,
         timestamp: true,
+        ref: { id: true },
         customer: { id: true }
       }
     }); 

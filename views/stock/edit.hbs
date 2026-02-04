@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Editar Estoque / Lote #{{stock.id}}</h5>
+                <a href="/stock" class="btn btn-sm btn-outline-light">Cancelar</a>
+            </div>
+            <div class="card-body">
+                <form action="/stock/update/{{stock.id}}" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Produto</label>
+                        <select name="productId" class="form-select" required>
+                            {{#each products}}
+                                <option value="{{this.id}}" {{#ifEquals this.id ../stock.product.id}}selected{{/ifEquals}}>
+                                    {{this.name}}
+                                </option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Qtd Total (Física)</label>
+                            <input type="number" name="quantity" class="form-control" step="0.1" value="{{stock.quantity}}" required>
+                            <small class="text-muted">Reservado atual: {{stock.reservedQuantity}}</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Lote/Batch</label>
+                            <input type="text" name="batchNumber" class="form-control" value="{{stock.batchNumber}}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Data de Validade</label>
+                        <input type="date" name="expirationDate" class="form-control" value="{{stock.expirationDate}}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Observações</label>
+                        <textarea name="observation" class="form-control" rows="3">{{stock.observation}}</textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary fw-bold">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-warning mt-3 border-0 shadow-sm">
+            <i class="bi bi-exclamation-triangle"></i> 
+            <strong>Atenção:</strong> Alterar a quantidade total não afeta as reservas feitas pelo Bot. 
+            Certifique-se de que a quantidade física seja sempre maior ou igual à reservada.
+        </div>
+    </div>
+</div>

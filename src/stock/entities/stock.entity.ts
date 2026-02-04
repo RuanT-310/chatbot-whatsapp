@@ -1,16 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
+import { Order } from 'src/order/entities/order.entity';
+import { de } from 'zod/v4/locales';
+import { OrderItem } from 'src/order/entities/order-item.entity';
 
 @Entity()
 export class Stock {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('number')
+  @Column('integer')
   quantity: number;
 
-  @Column('number')
-  reserverdQuantity: number;
+  
+  @Column('float', { precision: 10, scale: 2, default: 0.0 })
+  reservedQuantity: number;
 
   @Column('date') // Data de validade do lote
   expirationDate: string;
@@ -23,4 +27,7 @@ export class Stock {
 
   @ManyToOne(() => Product, (product) => product.stocks, { onDelete: 'CASCADE' })
   product: Product;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.stock, { onDelete: 'CASCADE' })
+  orders: OrderItem[];
 }
