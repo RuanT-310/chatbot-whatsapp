@@ -41,12 +41,6 @@ async editPage(@Param('id', ParseIntPipe) id: number) {
 @Post('update/:id')
 @Redirect('/stock')
 async update(@Param('id', ParseIntPipe) id: number, @Body() updateStockDto: any) {
-  // Garantindo conversão de tipos para o SQLite
-  const formattedData = {
-    ...updateStockDto,
-    quantity: Number(updateStockDto.quantity),
-    productId: Number(updateStockDto.productId)
-  };
-  await this.stockService.update(id, formattedData);
+  await this.stockService.update(id, updateStockDto);
 }
 }

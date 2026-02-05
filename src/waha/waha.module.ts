@@ -5,6 +5,8 @@ import { HttpModule } from '@nestjs/axios';
 import { WorkGraphModule } from 'src/work-graph/work-graph.module';
 import { CustomerModule } from 'src/customer/customer.module';
 import { MessagesModule } from 'src/messages/messages.module';
+import { StockModule } from 'src/stock/stock.module';
+import { PromptModule } from 'src/prompt/prompt.module';
 
 @Module({
   imports: [
@@ -14,7 +16,9 @@ import { MessagesModule } from 'src/messages/messages.module';
     }),
     WorkGraphModule,
     CustomerModule,
-    MessagesModule
+    MessagesModule,
+    StockModule,
+    PromptModule
   ],
   controllers: [WahaController],
   providers: [WahaService],

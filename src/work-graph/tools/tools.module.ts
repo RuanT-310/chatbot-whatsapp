@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SegredoCaixa } from './segredo-caixa/segredo-caixa';
-import { RentalModule } from './rental/rental.module';
+
+import { OrderToolModule } from './order/order-tool.module';
 
 //tool define name for user
 //tool verify stock of product
@@ -10,8 +10,7 @@ import { RentalModule } from './rental/rental.module';
 
 //product - stocks - order 
 @Module({
-  imports: [RentalModule],
-  providers: [SegredoCaixa],
-  exports: [SegredoCaixa, RentalModule],
+  imports: [OrderToolModule],
+  exports: [OrderToolModule],
 })
 export class ToolsModule {}

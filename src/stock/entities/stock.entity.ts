@@ -11,7 +11,6 @@ export class Stock {
 
   @Column('integer')
   quantity: number;
-
   
   @Column('float', { precision: 10, scale: 2, default: 0.0 })
   reservedQuantity: number;

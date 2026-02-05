@@ -11,9 +11,11 @@ export class WahaService {
   ) {}
 
   async sendTextMessage(chatId: string, text: string, session: string): Promise<any> {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const wahaUrl = this.configService.getOrThrow<string>('WAHA_URL');
+    const wahaApiKey = this.configService.getOrThrow<string>('WAHA_API_KEY');
+
     const response = this.httpService.post<any>(
-      `${this.configService.getOrThrow<string>('WAHA_URL')}/api/sendText`,
+      `${wahaUrl}/api/sendText`,
       {
         session,
         chatId,
@@ -22,7 +24,7 @@ export class WahaService {
       {
         headers: {
           'Content-Type': 'application/json',
-          'X-Api-Key': 'admin'
+          'X-Api-Key': wahaApiKey
         },
       },
     )

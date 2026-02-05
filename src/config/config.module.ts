@@ -8,8 +8,10 @@ import * as Joi from 'joi';
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
         GEMINIAPIKEY: Joi.string().required(),
+        OPENAI_API_KEY: Joi.string().required(),
         PORT: Joi.number().default(3000),
         WAHA_URL: Joi.string().required(),
+        WAHA_API_KEY: Joi.string().required(),
       }),
       isGlobal: true,
     })],

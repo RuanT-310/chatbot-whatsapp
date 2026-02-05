@@ -56,6 +56,7 @@ export class MessagesService {
     return this.messagesRepository.find({
       relations: {
         customer: true,
+        ref: true
       },
       select: {
         id: true,
@@ -79,13 +80,5 @@ export class MessagesService {
     return this.messagesRepository.delete(id);
   }
 
-  async chatMessagesPrompt (messages: Message[]) {
-    const promises = messages.map(async (msg) => {
-      console.log(msg);
-      if (!!msg.ref) return null;
-      const agentMessage = messages.find(m => m.ref?.id === msg.id);
-      return `Customer (${msg.timestamp}): ${msg.body} - Agent: ${agentMessage?.body || 'No response yet'}`;
-    })
-    return (await Promise.all(promises)).filter(m => m !== null).join('\n');
-  }
+
 }

@@ -6,9 +6,9 @@ import { AnswerQuestionGraph } from './graphs/answer-question-graph/answer-quest
 import { ToolsModule } from './tools/tools.module';
 
 @Module({
+  imports: [GraphsModule, ToolsModule],
   controllers: [WorkGraphController],
   providers: [WorkGraphService, AnswerQuestionGraph],
   exports: [WorkGraphService],
-  imports: [GraphsModule, ToolsModule],
 })
 export class WorkGraphModule {}

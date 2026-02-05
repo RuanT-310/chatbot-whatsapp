@@ -10,9 +10,10 @@ import { MessagesModule } from './messages/messages.module';
 import { ProductModule } from './product/product.module';
 import { StockModule } from './stock/stock.module';
 import { OrderModule } from './order/order.module';
+import { PromptModule } from './prompt/prompt.module';
 
 @Module({
-  imports: [WahaModule, WorkGraphModule, ConfigModule, CustomerModule, DatabaseModule, MessagesModule, ProductModule, StockModule, OrderModule],
+  imports: [WahaModule, WorkGraphModule, ConfigModule, CustomerModule, DatabaseModule, MessagesModule, ProductModule, StockModule, OrderModule, PromptModule],
   controllers: [AppController],
   providers: [AppService],
 })

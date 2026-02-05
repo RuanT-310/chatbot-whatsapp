@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AnswerQuestionGraph } from './answer-question-graph/answer-question-graph';
-import { LlmGeminiGogle } from '../lmm/llm-gemini-gogle/llm-gemini-gogle';
+import { LlmOpenIa } from '../lmm/llm-open-ia/llm-open-ia';
 import { ToolsModule } from '../tools/tools.module';
 import { LLmProvider } from '../lmm/llm-provider';
 import { ConfigModule } from 'src/config/config.module';
@@ -11,14 +11,14 @@ import { ConfigModule } from 'src/config/config.module';
         AnswerQuestionGraph,
         {
             provide: LLmProvider,
-            useClass: LlmGeminiGogle,
+            useClass: LlmOpenIa,
         }
     ],
     exports: [
         AnswerQuestionGraph,
         {
             provide: LLmProvider,
-            useClass: LlmGeminiGogle,
+            useClass: LlmOpenIa,
         }
     ],
 })

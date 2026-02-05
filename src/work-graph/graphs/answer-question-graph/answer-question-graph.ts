@@ -9,9 +9,7 @@ import { N } from 'node_modules/@langchain/langgraph/dist/prebuilt/react_agent_e
 import { LLmProvider } from 'src/work-graph/lmm/llm-provider';
 import { createCallModelWithTools } from 'src/work-graph/nodes/call-model';
 import { AgentState } from 'src/work-graph/states/agent-state';
-import { RentalSearch } from 'src/work-graph/tools/rental/rental-search/rental-search';
-import { SegredoCaixa } from 'src/work-graph/tools/segredo-caixa/segredo-caixa';
-import { th } from 'zod/v4/locales';
+import { CreateOrder } from 'src/work-graph/tools/order/create-order/create-order';
 
 @Injectable()
 export class AnswerQuestionGraph {
@@ -19,12 +17,14 @@ export class AnswerQuestionGraph {
     tools: (DynamicTool | DynamicStructuredTool)[] = []
     constructor (
         modelProvider: LLmProvider,
-        segredoCaixaToolProvider: SegredoCaixa,
-        searchRentalToolProvider: RentalSearch,
+        createOrderToolProvider: CreateOrder,
     ) {
+
+        /* 
+            create order tool
+        */
         this.tools.push(
-            segredoCaixaToolProvider.tool(),
-            searchRentalToolProvider.tool()
+            createOrderToolProvider.tool()
         )
         this.model = modelProvider.model()
     }
